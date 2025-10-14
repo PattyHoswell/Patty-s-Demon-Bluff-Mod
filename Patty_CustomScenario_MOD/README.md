@@ -1,7 +1,12 @@
 # Custom Scenario
-A mod that allows you to make any custom scenario just by editing `.json` files. Doesn't support Ascension mode yet
+A mod that allows you to make any custom scenario just by editing `.json` files.
+
+<img width="1911" height="989" alt="Screenshot 2025-10-14 130634" src="https://github.com/user-attachments/assets/38f0935d-22aa-4f32-b036-c2cf99187ac6" />
 
 The mod will extract the scenario from the game, then convert it into a human readable format, and load that file back into the game.
+
+### Note:
+#### You can only have 5 character minimum and 11 maximum, more or less than that will break the game for now.
 
 There's a bunch of configuration you can setup to change the mod functionality
 ```
@@ -26,10 +31,7 @@ AddCustomEndlessScenario = true
 # May added the game scenario as well. Only enable if you know what you're doing
 LoadUnregisteredScenarioData = false
 ```
-You can find this settings at `UserData/CustomScenarioSettings.cfg`. Run the game at least onces to see the settings. All eligible character are extracted into `AllCharacterName.txt` you can find next to the mod DLL.
-
-Note:
-You can only have 5 character minimum and 11 maximum, and more or less than that will break the game for now.
+You can find this settings at `UserData/CustomScenarioSettings.cfg`. Run the game at least onces to see the settings. All eligible character are extracted into `AllCharacterName.txt` you can find next to the mod DLL. The mod doesn't support Ascension mode yet (technically possible right now but only through Debug) but i may add it later if i have the mood to and people liked the mod.
 
 Currently available character (May support modded role, but i don't promise if it'll work):
 ```
