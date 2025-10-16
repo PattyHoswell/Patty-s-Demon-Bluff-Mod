@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36203.30 d17.14
+VisualStudioVersion = 17.14.36203.30
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patty_CustomScenario_MOD", "Patty_CustomScenario_MOD\Patty_CustomScenario_MOD.csproj", "{9C73DA3F-28ED-4BF8-954F-24E738E11CB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patty_CustomRole_MOD", "Patty_CustomRole_MOD\Patty_CustomRole_MOD.csproj", "{71A08919-627C-4243-B50F-030B8148AE65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9C73DA3F-28ED-4BF8-954F-24E738E11CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C73DA3F-28ED-4BF8-954F-24E738E11CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C73DA3F-28ED-4BF8-954F-24E738E11CB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71A08919-627C-4243-B50F-030B8148AE65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71A08919-627C-4243-B50F-030B8148AE65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71A08919-627C-4243-B50F-030B8148AE65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71A08919-627C-4243-B50F-030B8148AE65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
