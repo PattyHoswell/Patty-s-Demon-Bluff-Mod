@@ -67,29 +67,29 @@ namespace Patty_CustomRole_MOD
             DirectoryInfo characterFolder = Directory.CreateDirectory(Path.Combine(BasePath, "Role"));
             foreach (var character in allCharacterData.Value)
             {
-                string folderName;
-                if (character.role.GetIl2CppType().Assembly.GetName().name == "Assembly-CSharp")
-                {
-                    folderName = "Vanilla";
-                }
-                else
-                {
-                    folderName = Path.GetFileNameWithoutExtension(character.role.GetType().Assembly.Location);
-                }
-                DirectoryInfo characterSubFolder = Directory.CreateDirectory(Path.Combine(characterFolder.FullName, folderName));
-                var characterPath = Path.Combine(characterSubFolder.FullName, $"{character.name}.json");
-                var duplicateAmt = Utility.CheckDuplicatedAmountCharName(character.name);
-                if (duplicateAmt > 1)
-                {
-                    MelonLogger.Warning($"There are duplicate character name. {character.name}. extracting by character id instead...");
-                    if (duplicateAmt > 2)
-                    {
-                        LoggerInstance.BigError($"There are {duplicateAmt} characters with the name {character.name}, make sure to check the correct one by id!");
-                    }
-                    characterPath = Path.Combine(characterSubFolder.FullName, $"{character.characterId}.json");
-                }
                 try
                 {
+                    string folderName;
+                    if (character.role?.GetIl2CppType().Assembly.GetName().name == "Assembly-CSharp")
+                    {
+                        folderName = "Vanilla";
+                    }
+                    else
+                    {
+                        folderName = Path.GetFileNameWithoutExtension(character.role?.GetType().Assembly.Location) ?? "Modded";
+                    }
+                    DirectoryInfo characterSubFolder = Directory.CreateDirectory(Path.Combine(characterFolder.FullName, folderName));
+                    var characterPath = Path.Combine(characterSubFolder.FullName, $"{character.name}.json");
+                    var duplicateAmt = Utility.CheckDuplicatedAmountCharName(character.name);
+                    if (duplicateAmt > 1)
+                    {
+                        MelonLogger.Warning($"There are duplicate character name. {character.name}. extracting by character id instead...");
+                        if (duplicateAmt > 2)
+                        {
+                            LoggerInstance.BigError($"There are {duplicateAmt} characters with the name {character.name}, make sure to check the correct one by id!");
+                        }
+                        characterPath = Path.Combine(characterSubFolder.FullName, $"{character.characterId}.json");
+                    }
                     ExtractRole(character, characterPath, folderName);
                 }
                 catch (Exception e)
