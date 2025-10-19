@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(CustomRole), "Patty_CustomRole_MOD", "1.0.1", "PattyHoswell")]
+[assembly: MelonInfo(typeof(CustomRole), "Patty_CustomRole_MOD", "1.0.2", "PattyHoswell")]
 [assembly: MelonGame("UmiArt", "Demon Bluff")]
 [assembly: MelonPlatformDomain(MelonPlatformDomainAttribute.CompatibleDomains.IL2CPP)]
 [assembly: MelonPriority(99)]
@@ -78,6 +78,16 @@ namespace Patty_CustomRole_MOD
                 }
                 DirectoryInfo characterSubFolder = Directory.CreateDirectory(Path.Combine(characterFolder.FullName, folderName));
                 var characterPath = Path.Combine(characterSubFolder.FullName, $"{character.name}.json");
+                var duplicateAmt = Utility.CheckDuplicatedAmountCharName(character.name);
+                if (duplicateAmt > 1)
+                {
+                    MelonLogger.Warning($"There are duplicate character name. {character.name}. extracting by character id instead...");
+                    if (duplicateAmt > 2)
+                    {
+                        LoggerInstance.BigError($"There are {duplicateAmt} characters with the name {character.name}, make sure to check the correct one by id!");
+                    }
+                    characterPath = Path.Combine(characterSubFolder.FullName, $"{character.characterId}.json");
+                }
                 try
                 {
                     ExtractRole(character, characterPath, folderName);
@@ -131,6 +141,17 @@ namespace Patty_CustomRole_MOD
                     var character = Utility.FindCharacter(Path.GetFileNameWithoutExtension(json.Name));
                     if (character == null)
                     {
+                        LoggerInstance.Warning(json.Name + " not found by file name, trying by id...");
+                        character = Utility.FindCharacterById(Path.GetFileNameWithoutExtension(json.Name));
+                    }
+                    if (character == null)
+                    {
+                        LoggerInstance.Warning(json.Name + " not found by file name, trying by the characterId inside the json...");
+                        character = Utility.FindCharacterById(Path.GetFileNameWithoutExtension(result.CharacterId));
+                    }
+                    if (character == null)
+                    {
+                        LoggerInstance.Warning(json.Name + " doesn't seem to exist. Creating new CharacterData instead");
                         character = ScriptableObject.CreateInstance<CharacterData>();
                         ProjectContext.Instance.gameData.allCharacterData.Add(character);
                     }

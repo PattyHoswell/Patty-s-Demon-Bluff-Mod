@@ -18,6 +18,27 @@ namespace Patty_CustomRole_MOD
             return null!;
         }
 
+        public static int CheckDuplicatedAmountCharName(string name)
+        {
+            var hashSet = new HashSet<CharacterData>();
+            Func<CharacterData, bool> findFunc = c => c.name == name;
+            foreach (var character in ProjectContext.Instance.gameData.allCharacterData)
+            {
+                if (findFunc.Invoke(character))
+                {
+                    hashSet.Add(character);
+                }
+            }
+            foreach (var characterData in CustomRole.allCharacterData.Value)
+            {
+                if (findFunc.Invoke(characterData))
+                {
+                    hashSet.Add(characterData);
+                }
+            }
+            return hashSet.Count;
+        }
+
         /// <summary>
         /// Guarantees to find the character data by name, including custom characters.
         /// Unless the character does not exist at all.
@@ -27,6 +48,43 @@ namespace Patty_CustomRole_MOD
         public static CharacterData FindCharacter(string name)
         {
             Func<CharacterData, bool> findFunc = c => c.name == name;
+            var charData = ProjectContext.Instance.gameData.allCharacterData.Find(findFunc);
+            if (charData == null)
+            {
+                foreach (var characterData in CustomRole.allCharacterData.Value)
+                {
+                    if (findFunc.Invoke(characterData))
+                    {
+                        ProjectContext.Instance.gameData.allCharacterData.Add(characterData);
+                        return characterData;
+                    }
+                }
+            }
+            if (charData == null)
+            {
+                // In case the character is not in the game data yet (e.g., custom characters not yet added)
+                // This is not actually needed if we ensure custom characters are added this mod is loaded.
+                // But just in case, we do this fallback.
+                foreach (var characterData in Resources.FindObjectsOfTypeAll<CharacterData>())
+                {
+                    if (findFunc.Invoke(characterData))
+                    {
+                        ProjectContext.Instance.gameData.allCharacterData.Add(characterData);
+                        return characterData;
+                    }
+                }
+            }
+            return charData!;
+        }
+        /// <summary>
+        /// Guarantees to find the character data by name, including custom characters.
+        /// Unless the character does not exist at all.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static CharacterData FindCharacterById(string id)
+        {
+            Func<CharacterData, bool> findFunc = c => c.characterId == id;
             var charData = ProjectContext.Instance.gameData.allCharacterData.Find(findFunc);
             if (charData == null)
             {
