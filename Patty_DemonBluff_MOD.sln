@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patty_CustomScenario_MOD", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patty_CustomRole_MOD", "Patty_CustomRole_MOD\Patty_CustomRole_MOD.csproj", "{71A08919-627C-4243-B50F-030B8148AE65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patty_CustomAudio_MOD", "Patty_CustomAudio_MOD\Patty_CustomAudio_MOD.csproj", "{AC7E7C84-2852-4614-BED3-892CA932CC08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{71A08919-627C-4243-B50F-030B8148AE65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71A08919-627C-4243-B50F-030B8148AE65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71A08919-627C-4243-B50F-030B8148AE65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC7E7C84-2852-4614-BED3-892CA932CC08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC7E7C84-2852-4614-BED3-892CA932CC08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC7E7C84-2852-4614-BED3-892CA932CC08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC7E7C84-2852-4614-BED3-892CA932CC08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

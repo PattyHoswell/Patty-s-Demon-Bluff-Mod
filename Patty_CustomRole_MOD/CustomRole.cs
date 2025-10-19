@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(CustomRole), "Patty_CustomRole_MOD", "1.0.0", "PattyHoswell")]
+[assembly: MelonInfo(typeof(CustomRole), "Patty_CustomRole_MOD", "1.0.1", "PattyHoswell")]
 [assembly: MelonGame("UmiArt", "Demon Bluff")]
 [assembly: MelonPlatformDomain(MelonPlatformDomainAttribute.CompatibleDomains.IL2CPP)]
 [assembly: MelonPriority(99)]
@@ -94,7 +94,9 @@ namespace Patty_CustomRole_MOD
             DirectoryInfo textureFolder = Directory.CreateDirectory(Path.Combine(BasePath, "Texture"));
             foreach (FileInfo png in textureFolder.GetFiles("*.png", SearchOption.AllDirectories))
             {
-                allLoadedTextures[png] = Utility.CreateSprite(png);
+                var sprite = Utility.CreateSprite(png);
+                if (sprite != null)
+                    allLoadedTextures[png] = sprite;
             }
         }
 

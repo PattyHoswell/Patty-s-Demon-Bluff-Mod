@@ -18,6 +18,12 @@ namespace Patty_CustomRole_MOD
             return null!;
         }
 
+        /// <summary>
+        /// Guarantees to find the character data by name, including custom characters.
+        /// Unless the character does not exist at all.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static CharacterData FindCharacter(string name)
         {
             Func<CharacterData, bool> findFunc = c => c.name == name;
@@ -27,7 +33,24 @@ namespace Patty_CustomRole_MOD
                 foreach (var characterData in CustomRole.allCharacterData.Value)
                 {
                     if (findFunc.Invoke(characterData))
+                    {
+                        ProjectContext.Instance.gameData.allCharacterData.Add(characterData);
                         return characterData;
+                    }
+                }
+            }
+            if (charData == null)
+            {
+                // In case the character is not in the game data yet (e.g., custom characters not yet added)
+                // This is not actually needed if we ensure custom characters are added this mod is loaded.
+                // But just in case, we do this fallback.
+                foreach (var characterData in Resources.FindObjectsOfTypeAll<CharacterData>())
+                {
+                    if (findFunc.Invoke(characterData))
+                    {
+                        ProjectContext.Instance.gameData.allCharacterData.Add(characterData);
+                        return characterData;
+                    }
                 }
             }
             return charData!;
@@ -64,11 +87,11 @@ namespace Patty_CustomRole_MOD
             return null;
         }
 
-        public static Texture2D GetReadableImage(this Texture2D texture2D)
+        public static (Texture2D texture, bool isOriginal) GetReadableImage(this Texture2D texture2D)
         {
             if (texture2D.isReadable)
             {
-                return texture2D;
+                return (texture2D, true);
             }
 
             var tempRT = RenderTexture.GetTemporary(texture2D.width,
@@ -98,7 +121,7 @@ namespace Patty_CustomRole_MOD
                 RenderTexture.ReleaseTemporary(tempRT);
             }
 
-            return newTexture;
+            return (newTexture, false);
         }
 
         public static void ExtractImage(this Sprite sprite, string folder, bool overrides = false)
@@ -109,7 +132,7 @@ namespace Patty_CustomRole_MOD
             if (!overrides && File.Exists(fileName))
                 return;
 
-            var image = sprite.texture.GetReadableImage();
+            var (texture2d, isOriginal) = sprite.texture.GetReadableImage();
             var texture = new Texture2D(Mathf.CeilToInt(sprite.rect.width), Mathf.CeilToInt(sprite.rect.height), TextureFormat.RGBA32, false);
             texture.filterMode = FilterMode.Point;
 
@@ -118,7 +141,7 @@ namespace Patty_CustomRole_MOD
             int width = Mathf.CeilToInt(sprite.rect.width);
             int height = Mathf.CeilToInt(sprite.rect.height);
 
-            Graphics.CopyTexture(image,
+            Graphics.CopyTexture(texture2d,
                                  srcElement: 0,
                                  srcMip: 0,
                                  srcX, srcY, width, height,
@@ -129,15 +152,22 @@ namespace Patty_CustomRole_MOD
 
             texture.Apply();
             File.WriteAllBytes(fileName, ImageConversion.EncodeToPNG(texture));
+            if (!isOriginal)
+            {
+                UnityEngine.Object.Destroy(texture2d);
+            }
         }
 
-        public static Sprite CreateSprite(FileInfo file)
+        public static Sprite? CreateSprite(FileInfo file)
         {
             var texture = new Texture2D(0, 0, TextureFormat.RGBA32, true);
             texture.filterMode = FilterMode.Trilinear;
             texture.mipMapBias = -1f;
-            if (ImageConversion.LoadImage(texture, File.ReadAllBytes(file.FullName), true))
+            if (!ImageConversion.LoadImage(texture, File.ReadAllBytes(file.FullName), true))
+            {
+                MelonLogger.Error(file.FullName + " is not a valid image file.");
                 return null;
+            }
 
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.Tight);
             sprite.name = Path.GetFileNameWithoutExtension(file.Name);
