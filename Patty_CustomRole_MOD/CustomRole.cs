@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(CustomRole), "Patty_CustomRole_MOD", "1.0.2", "PattyHoswell")]
+[assembly: MelonInfo(typeof(CustomRole), "Patty_CustomRole_MOD", "1.0.3", "PattyHoswell")]
 [assembly: MelonGame("UmiArt", "Demon Bluff")]
 [assembly: MelonPlatformDomain(MelonPlatformDomainAttribute.CompatibleDomains.IL2CPP)]
 [assembly: MelonPriority(99)]
