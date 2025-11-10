@@ -6,6 +6,7 @@
 	<DebugType>none</DebugType>
 	<GenerateDependencyFile>false</GenerateDependencyFile>
 	<NuGetAuditLevel>low</NuGetAuditLevel>
+	<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
@@ -15,6 +16,14 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\MelonLoader\Il2CppAssemblies\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Il2CppDOTween">
+      <HintPath>..\..\MelonLoader\Il2CppAssemblies\Il2CppDOTween.dll</HintPath>
+		<Private>False</Private>
+    </Reference>
+    <Reference Include="Il2CppDOTweenPro">
+      <HintPath>..\..\MelonLoader\Il2CppAssemblies\Il2CppDOTweenPro.dll</HintPath>
+		<Private>False</Private>
     </Reference>
     <Reference Include="Il2CppInterop.Common">
       <HintPath>..\..\MelonLoader\net6\Il2CppInterop.Common.dll</HintPath>
@@ -40,12 +49,48 @@
       <HintPath>..\..\MelonLoader\net6\MelonLoader.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\MelonLoader\net6\Mono.Cecil.dll</HintPath>
+		<Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+      <HintPath>..\..\MelonLoader\Il2CppAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+		<Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\MelonLoader\Il2CppAssemblies\Unity.TextMeshPro.dll</HintPath>
+		<Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.ImageConversionModule.dll</HintPath>
+		<Private>False</Private>
+	</Reference>
+	<Reference Include="UnityEngine.IMGUIModule">
+		<HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.IMGUIModule.dll</HintPath>
+		<Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.InputLegacyModule.dll</HintPath>
+		<Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.UIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
