@@ -37,7 +37,6 @@ namespace Patty_CustomScenario_MOD
                     newScript.Initialize(ascension.possibleScriptsData[i]);
                     PossibleScriptsData.Add(newScript);
                     PossibleScriptsDataName.Add(newScript.Name);
-                    CustomScenario.Logger.Msg("Adding script data " + newScript.Name);
                 }
             }
         }

@@ -14,7 +14,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-[assembly: MelonInfo(typeof(CustomScenario), "Patty_CustomScenario_MOD", "2.0.0", "PattyHoswell")]
+[assembly: MelonInfo(typeof(CustomScenario), "Patty_CustomScenario_MOD", "2.0.1", "PattyHoswell")]
 [assembly: MelonGame("UmiArt", "Demon Bluff")]
 [assembly: MelonPlatformDomain(MelonPlatformDomainAttribute.CompatibleDomains.IL2CPP)]
 [assembly: MelonPriority(100)]
@@ -25,14 +25,7 @@ namespace Patty_CustomScenario_MOD
     {
         public const string MAIN_CATEGORY = "CustomScenario",
                             DEBUG = "Debug",
-                            EXTRACT_ORIGINAL_FILES = "ExtractOriginalFiles",
-                            ADD_CUSTOM_ENDLESS_SCENARIO = "AddCustomEndlessScenario",
-                            LOAD_UNREGISTERED_SCENARIO_DATA = "LoadUnregisteredScenarioData",
-                            REPLACE_DEBUG_SCENARIO = "ReplaceDebugScenario",
-                            REPLACE_ENDLESS_SCENARIO = "ReplaceEndlessScenario",
-                            REPLACE_NORMAL_MODE_SCENARIO = "ReplaceNormalModeScenario",
-                            REPLACE_ROGUELIKE_SCENARIO = "ReplaceRoguelikeScenario",
-                            REPLACE_ROGUELIKE_STANDARD_SCENARIO = "ReplaceRoguelikeStandardScenario";
+                            EXTRACT_ORIGINAL_FILES = "ExtractOriginalFiles";
 
         public static readonly EAlignment AllAlignment = (EAlignment)(-900);
         public static readonly ECharacterType AllCharacterType = (ECharacterType)(-900);
@@ -47,6 +40,7 @@ namespace Patty_CustomScenario_MOD
         public MelonPreferences_Category configCategory;
 
         public static Lazy<Il2CppArrayBase<CharacterData>> allCharacterData = new(() => Resources.FindObjectsOfTypeAll<CharacterData>(), isThreadSafe: false);
+        public static Lazy<Il2CppArrayBase<AscensionsData>> allAscensionData = new(() => Resources.FindObjectsOfTypeAll<AscensionsData>(), isThreadSafe: false);
 
         public string base64string;
 
@@ -141,25 +135,10 @@ namespace Patty_CustomScenario_MOD
 
         private void ExtractScenarios()
         {
-            UniversalUtility.ExtractAscension(ProjectContext.Instance.gameData.advancedAscension);
-            UniversalUtility.ExtractAscension(ProjectContext.Instance.gameData.debugAscension);
-            for (int i = 0; i < ProjectContext.Instance.gameData.standardAscensions.Count; i++)
+            foreach (var ascensionData in allAscensionData.Value)
             {
-                UniversalUtility.ExtractAscension(ProjectContext.Instance.gameData.standardAscensions[i]);
+                UniversalUtility.ExtractAscension(ascensionData);
             }
-            for (int i = 0; i < ProjectContext.Instance.gameData.roguelikeAscensions.Count; i++)
-            {
-                UniversalUtility.ExtractAscension(ProjectContext.Instance.gameData.roguelikeAscensions[i]);
-            }
-            for (int i = 0; i < ProjectContext.Instance.gameData.roguelikeStandardAscensions.Count; i++)
-            {
-                AscensionsList ascensionList = ProjectContext.Instance.gameData.roguelikeStandardAscensions[i];
-                for (var j = 0; j < ascensionList.ascensions.Count; j++)
-                {
-                    UniversalUtility.ExtractAscension(ascensionList.ascensions[i]);
-                }
-            }
-            UniversalUtility.ExtractAscension(ProjectContext.Instance.gameData.allCharactersAscension);
         }
 
         private void LoadCustomScriptData()
@@ -200,7 +179,7 @@ namespace Patty_CustomScenario_MOD
         {
             foreach (var scenarioJson in customScripts)
             {
-                var originalAscension = GameUtility.FindCustomScriptData(scenarioJson.Value.Name) ?? ScriptableObject.CreateInstance<CustomScriptData>();
+                var originalAscension = GameUtility.FindCustomScriptData(Path.GetFileNameWithoutExtension(scenarioJson.Key)) ?? ScriptableObject.CreateInstance<CustomScriptData>();
                 scenarioJson.Value.Assign(originalAscension);
                 Logger.Msg($"Assigning Script Data {Path.GetFileName(scenarioJson.Key)} to {scenarioJson.Value.Name}");
             }
@@ -210,7 +189,7 @@ namespace Patty_CustomScenario_MOD
         {
             foreach (var ascensionJson in customAscensions)
             {
-                var originalAscension = GameUtility.FindAscensionData(ascensionJson.Value.Name) ?? ScriptableObject.CreateInstance<AscensionsData>();
+                var originalAscension = GameUtility.FindAscensionData(Path.GetFileNameWithoutExtension(ascensionJson.Key)) ?? ScriptableObject.CreateInstance<AscensionsData>();
                 ascensionJson.Value.Assign(originalAscension);
                 Logger.Msg($"Assigning {Path.GetFileName(ascensionJson.Key)} to {ascensionJson.Value.Name}");
             }
