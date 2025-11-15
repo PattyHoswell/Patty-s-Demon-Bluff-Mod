@@ -11,10 +11,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(ModdedCompendium), "Patty_ModdedCompendium_MOD", "2.0.0", "PattyHoswell")]
+[assembly: MelonInfo(typeof(ModdedCompendium), "Patty_ModdedCompendium_MOD", "1.0.0", "PattyHoswell")]
 [assembly: MelonGame("UmiArt", "Demon Bluff")]
 [assembly: MelonPlatformDomain(MelonPlatformDomainAttribute.CompatibleDomains.IL2CPP)]
-[assembly: MelonPriority(100)]
 [assembly: HarmonyDontPatchAll]
 namespace Patty_ModdedCompendium_MOD
 {
