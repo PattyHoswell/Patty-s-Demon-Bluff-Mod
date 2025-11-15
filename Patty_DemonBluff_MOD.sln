@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patty_CustomStartingHP_MOD"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patty_ModdedCompendium_MOD", "Patty_ModdedCompendium_MOD\Patty_ModdedCompendium_MOD.csproj", "{A291D4A5-B587-4E08-8516-FBF212FAB953}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patty_TransferableSaves_MOD", "Patty_TransferableSaves_MOD\Patty_TransferableSaves_MOD.csproj", "{B9C9B272-3123-4E37-B49B-0530424E6387}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A291D4A5-B587-4E08-8516-FBF212FAB953}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A291D4A5-B587-4E08-8516-FBF212FAB953}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A291D4A5-B587-4E08-8516-FBF212FAB953}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9C9B272-3123-4E37-B49B-0530424E6387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9C9B272-3123-4E37-B49B-0530424E6387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9C9B272-3123-4E37-B49B-0530424E6387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9C9B272-3123-4E37-B49B-0530424E6387}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
