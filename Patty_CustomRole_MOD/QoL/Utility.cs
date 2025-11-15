@@ -2,10 +2,20 @@
 using MelonLoader;
 using UnityEngine;
 
-namespace Patty_CustomRole_MOD
+namespace Patty_CustomRole_MOD.QoL
 {
     public static class Utility
     {
+
+        public static MelonBase GetMelonBaseFromRole(Role role)
+        {
+            if (role == null)
+            {
+                return null;
+            }
+            return MelonBase.RegisteredMelons.FirstOrDefault(x => x.MelonAssembly.Location == role.GetType().Assembly.Location);
+        }
+
         public static Sprite FindSprite(string fileNameWithoutExt)
         {
             foreach (var (file, sprite) in CustomRole.allLoadedTextures)
@@ -74,17 +84,18 @@ namespace Patty_CustomRole_MOD
                     }
                 }
             }
-            return charData!;
+            return charData;
         }
+
         /// <summary>
-        /// Guarantees to find the character data by name, including custom characters.
+        /// Guarantees to find the character data by id, including custom characters.
         /// Unless the character does not exist at all.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static CharacterData FindCharacterById(string id)
+        public static CharacterData FindCharacterById(string id, bool searchByNameIfNull = false, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            Func<CharacterData, bool> findFunc = c => c.characterId == id;
+            Func<CharacterData, bool> findFunc = c => c.characterId.Equals(id, comparison);
             var charData = ProjectContext.Instance.gameData.allCharacterData.Find(findFunc);
             if (charData == null)
             {
@@ -111,20 +122,100 @@ namespace Patty_CustomRole_MOD
                     }
                 }
             }
-            return charData!;
+            if (charData == null && searchByNameIfNull)
+            {
+                charData = FindCharacter(id);
+            }
+            return charData;
         }
 
-        public static SkinData FindSkin(string name)
+        public static SkinData FindSkin(string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
+            SkinData skinData = null;
             foreach (var data in CustomRole.allSkinData.Value)
             {
-                if (data.name == name)
-                    return data;
+                if (data.name.Equals(name, comparison))
+                {
+                    skinData = data;
+                    break;
+                }
             }
-            return null!;
+            return skinData;
         }
 
-        public static Type FindType(string assemblyName, string typeName)
+        public static SkinData FindSkinById(string id, bool searchByNameIfNull = false, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            SkinData skinData = null!;
+            foreach (var data in CustomRole.allSkinData.Value)
+            {
+                if (data.skinId.Equals(id, comparison))
+                {
+                    skinData = data;
+                    break;
+                }
+            }
+            if (skinData == null)
+            {
+                foreach (var data in Resources.FindObjectsOfTypeAll<SkinData>())
+                {
+                    if (data.skinId.Equals(id, comparison))
+                    {
+                        skinData = data;
+                        break;
+                    }
+                }
+            }
+            if (skinData == null && searchByNameIfNull)
+            {
+                skinData = FindSkin(id);
+            }
+            return skinData;
+        }
+
+        public static AchievementData FindAchievement(string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            AchievementData achievementData = null!;
+            foreach (var data in CustomRole.allAchievementData.Value)
+            {
+                if (data.name.Equals(name, comparison))
+                {
+                    achievementData = data;
+                    break;
+                }
+            }
+            return achievementData;
+        }
+
+        public static AchievementData FindAchievementById(string id, bool searchByNameIfNull = false, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            AchievementData achievementData = null!;
+            foreach (var data in CustomRole.allAchievementData.Value)
+            {
+                if (data.id.Equals(id, comparison))
+                {
+                    achievementData = data;
+                    break;
+                }
+            }
+            if (achievementData == null)
+            {
+                foreach (var data in Resources.FindObjectsOfTypeAll<AchievementData>())
+                {
+                    if (data.id.Equals(id, comparison))
+                    {
+                        achievementData = data;
+                        break;
+                    }
+                }
+            }
+            if (achievementData == null && searchByNameIfNull)
+            {
+                achievementData = FindAchievement(id);
+            }
+            return achievementData;
+        }
+
+        public static Type FindType(string assemblyName, string typeName, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             var result = typeof(CharacterData).Assembly.GetType($"Il2Cpp.{typeName}");
             if (result != null)
@@ -133,7 +224,7 @@ namespace Patty_CustomRole_MOD
             }
             foreach (MelonBase melon in MelonBase.RegisteredMelons)
             {
-                if (Path.GetFileName(melon.MelonAssembly.Location).Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
+                if (Path.GetFileName(melon.MelonAssembly.Location).Equals(assemblyName, comparison))
                 {
                     result = melon.MelonAssembly.Assembly.GetType(typeName);
                     if (result != null)
@@ -158,7 +249,7 @@ namespace Patty_CustomRole_MOD
                                                     RenderTextureFormat.ARGB32);
 
             var activeRT = RenderTexture.active;
-            Texture2D newTexture = null;
+            Texture2D newTexture = null!;
 
             try
             {
@@ -214,6 +305,7 @@ namespace Patty_CustomRole_MOD
             {
                 UnityEngine.Object.Destroy(texture2d);
             }
+            UnityEngine.Object.Destroy(texture);
         }
 
         public static Sprite? CreateSprite(FileInfo file)
