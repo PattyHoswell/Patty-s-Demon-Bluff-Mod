@@ -8,7 +8,7 @@ namespace Patty_CustomRole_MOD.Json
     {
         public string Name { get; set; } = "";
         public string Id { get; set; } = "";
-        public bool AutoUnlocked { get; set; } = true;
+        public bool AutoUnlocked { get; set; } = false;
         public string Title { get; set; } = "";
         public string Description { get; set; } = "";
         public string RealEvent { get; set; } = "";
@@ -25,7 +25,7 @@ namespace Patty_CustomRole_MOD.Json
         {
             Name = data.name;
             Id = data.id;
-            AutoUnlocked = true;
+            AutoUnlocked = false;
             Title = data.title;
             Description = data.description;
             RealEvent = data.realEvent;
