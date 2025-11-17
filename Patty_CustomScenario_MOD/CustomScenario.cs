@@ -25,7 +25,8 @@ namespace Patty_CustomScenario_MOD
     {
         public const string MAIN_CATEGORY = "CustomScenario",
                             DEBUG = "Debug",
-                            EXTRACT_ORIGINAL_FILES = "ExtractOriginalFiles";
+                            EXTRACT_ORIGINAL_FILES = "ExtractOriginalFiles",
+                            WAIT_FRAMES = "Wait_For_Frames";
 
         public static readonly EAlignment AllAlignment = (EAlignment)(-900);
         public static readonly ECharacterType AllCharacterType = (ECharacterType)(-900);
@@ -89,27 +90,39 @@ namespace Patty_CustomScenario_MOD
             configCategory = MelonPreferences.CreateCategory(MAIN_CATEGORY, "Custom Scenario Settings");
             configCategory.CreateEntry(DEBUG, false, description: "When enabled, always start a scenario with debug data");
             configCategory.CreateEntry(EXTRACT_ORIGINAL_FILES, true, description: "When enabled, extract scenario data from the game if the file doesn't exist yet");
+            configCategory.CreateEntry(WAIT_FRAMES, 2, description: "The amount of frames this mod has to wait before executing. Increase this if some mod is activating later than this mod." +
+                                                                    "\nWhich can make changes implemented by this mod replaced by that mod" +
+                                                                    "\nMinimum: 2 Frame");
             configCategory.SetFilePath(Path.Combine(MelonEnvironment.UserDataDirectory, "CustomScenarioSettings.cfg"));
             configCategory.SaveToFile();
 
             GameData.DebugAscension = configCategory.GetEntry<bool>(DEBUG).Value;
 
+
+            MelonCoroutines.Start(InitializeAfterCertainFrame());
+        }
+
+
+        private IEnumerator InitializeAfterCertainFrame()
+        {
+            var waitAmount = Mathf.Max(2, configCategory.GetEntry<int>(WAIT_FRAMES).Value);
+            for (var i = 0; i < waitAmount; i++)
+            {
+                yield return YieldCache.WaitForEndOfFrame.Value;
+            }
             if (configCategory.GetEntry<bool>(EXTRACT_ORIGINAL_FILES).Value)
             {
                 ExtractScenarios();
             }
+            yield return YieldCache.WaitForEndOfFrame.Value;
             LoadCustomScriptData();
+            yield return YieldCache.WaitForEndOfFrame.Value;
             LoadAscensionData();
+            yield return YieldCache.WaitForEndOfFrame.Value;
             AssignCustomScriptData();
+            yield return YieldCache.WaitForEndOfFrame.Value;
             AssignAllAscension();
 
-            MelonCoroutines.Start(InitializeAfter2Frame());
-        }
-
-
-        private IEnumerator InitializeAfter2Frame()
-        {
-            yield return YieldCache.WaitForEndOfFrame.Value;
             yield return YieldCache.WaitForEndOfFrame.Value;
             CreateEditorGUI();
         }
@@ -179,9 +192,16 @@ namespace Patty_CustomScenario_MOD
         {
             foreach (var scenarioJson in customScripts)
             {
-                var originalAscension = GameUtility.FindCustomScriptData(Path.GetFileNameWithoutExtension(scenarioJson.Key)) ?? ScriptableObject.CreateInstance<CustomScriptData>();
-                scenarioJson.Value.Assign(originalAscension);
-                Logger.Msg($"Assigning Script Data {Path.GetFileName(scenarioJson.Key)} to {scenarioJson.Value.Name}");
+                try
+                {
+                    Logger.Msg($"Assigning Script Data {Path.GetFileName(scenarioJson.Key)} to {scenarioJson.Value.Name}");
+                    var originalAscension = GameUtility.FindCustomScriptData(Path.GetFileNameWithoutExtension(scenarioJson.Key)) ?? ScriptableObject.CreateInstance<CustomScriptData>();
+                    scenarioJson.Value.Assign(originalAscension);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Unknown error while trying to assign {scenarioJson.Key}, reason {(ex.InnerException ?? ex).Message}");
+                }
             }
         }
 
@@ -189,9 +209,16 @@ namespace Patty_CustomScenario_MOD
         {
             foreach (var ascensionJson in customAscensions)
             {
-                var originalAscension = GameUtility.FindAscensionData(Path.GetFileNameWithoutExtension(ascensionJson.Key)) ?? ScriptableObject.CreateInstance<AscensionsData>();
-                ascensionJson.Value.Assign(originalAscension);
-                Logger.Msg($"Assigning {Path.GetFileName(ascensionJson.Key)} to {ascensionJson.Value.Name}");
+                try
+                {
+                    Logger.Msg($"Assigning {Path.GetFileName(ascensionJson.Key)} to {ascensionJson.Value.Name}");
+                    var originalAscension = GameUtility.FindAscensionData(Path.GetFileNameWithoutExtension(ascensionJson.Key)) ?? ScriptableObject.CreateInstance<AscensionsData>();
+                    ascensionJson.Value.Assign(originalAscension);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Unknown error while trying to assign {ascensionJson.Key}, reason {(ex.InnerException ?? ex).Message}");
+                }
             }
         }
     }

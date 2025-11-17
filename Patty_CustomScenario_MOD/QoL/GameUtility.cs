@@ -21,7 +21,11 @@ namespace Patty_CustomScenario_MOD.QoL
         /// <returns></returns>
         public static CharacterData FindCharacter(string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            Func<CharacterData, bool> findFunc = c => c.name.Equals(name, comparison);
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null!;
+            }
+            Func<CharacterData, bool> findFunc = c => c != null && c.name.Equals(name, comparison);
             var charData = ProjectContext.Instance.gameData.allCharacterData.Find(findFunc);
             if (charData == null)
             {
@@ -56,9 +60,13 @@ namespace Patty_CustomScenario_MOD.QoL
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static CharacterData FindCharacterById(string id, bool searchByNameIfNull = true, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        public static CharacterData FindCharacterById(string id, bool searchByNameIfNull = false, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            Func<CharacterData, bool> findFunc = c => c.characterId.Equals(id, comparison);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null!;
+            }
+            Func<CharacterData, bool> findFunc = c => c != null && c.characterId.Equals(id, comparison);
             var charData = ProjectContext.Instance.gameData.allCharacterData.Find(findFunc);
             if (charData == null)
             {
@@ -94,6 +102,10 @@ namespace Patty_CustomScenario_MOD.QoL
 
         public static CustomScriptData_Json FindCustomScenarioData_Json(string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null!;
+            }
             Func<string, bool> findFunc = item => Path.GetFileNameWithoutExtension(item).Equals(name, comparison);
             foreach (var (filePath, data) in CustomScenario.customScripts)
             {
@@ -107,6 +119,10 @@ namespace Patty_CustomScenario_MOD.QoL
 
         public static AscensionsData_Json FindAscensionData_Json(string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null!;
+            }
             Func<string, bool> findFunc = item => Path.GetFileNameWithoutExtension(item).Equals(name, comparison);
             foreach (var (filePath, data) in CustomScenario.customAscensions)
             {
@@ -120,7 +136,11 @@ namespace Patty_CustomScenario_MOD.QoL
 
         public static CustomScriptData FindCustomScriptData(string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            Func<CustomScriptData, bool> findFunc = c => c.name.Equals(name, comparison);
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null!;
+            }
+            Func<CustomScriptData, bool> findFunc = c => c != null && c.name.Equals(name, comparison);
 
             foreach (var customScriptData in allCustomScriptData.Value)
             {
@@ -142,7 +162,11 @@ namespace Patty_CustomScenario_MOD.QoL
 
         public static AscensionsData FindAscensionData(string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            Func<AscensionsData, bool> findFunc = c => c.name.Equals(name, comparison);
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null!;
+            }
+            Func<AscensionsData, bool> findFunc = c => c != null && c.name.Equals(name, comparison);
 
             foreach (var ascensionData in allAscensionData.Value)
             {
