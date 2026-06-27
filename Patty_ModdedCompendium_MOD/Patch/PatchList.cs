@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using Il2Cpp;
+using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using MelonLoader;
 using System;
@@ -12,8 +13,9 @@ namespace Patty_ModdedCompendium_MOD.Patch
 {
     internal static class PatchList
     {
-        public static Lazy<Il2CppArrayBase<CharacterData>> allCharacterData = new Lazy<Il2CppArrayBase<CharacterData>>(() => Resources.FindObjectsOfTypeAll<CharacterData>(), isThreadSafe: false);
-
+        public static Lazy<Il2CppArrayBase<CharacterData>> allCharacterData = new Lazy<Il2CppArrayBase<CharacterData>>(
+            () => Resources.FindObjectsOfTypeAll(Il2CppType.Of<CharacterData>()).Cast<Il2CppArrayBase<CharacterData>>(),
+            isThreadSafe: false);
 
         [HarmonyPrefix, HarmonyPatch(typeof(Compendium), nameof(Compendium.LoadUnlockedCharacters))]
         public static void LoadUnlockedCharacters(Compendium __instance)

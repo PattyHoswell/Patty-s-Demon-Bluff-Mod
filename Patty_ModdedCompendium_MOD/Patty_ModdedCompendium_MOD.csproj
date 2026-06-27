@@ -15,7 +15,7 @@
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="Assembly-CSharp">
-			<HintPath>..\..\MelonLoader\Il2CppAssemblies\Assembly-CSharp.dll</HintPath>
+			<HintPath>..\..\..\Demon Bluff Demo\MelonLoader\Il2CppAssemblies\Assembly-CSharp.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="Il2CppInterop.Common">
@@ -42,12 +42,24 @@
 			<HintPath>..\..\MelonLoader\net6\MelonLoader.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="Unity.Localization">
+			<HintPath>..\..\..\Demon Bluff Demo\MelonLoader\Il2CppAssemblies\Unity.Localization.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Unity.ResourceManager">
+			<HintPath>..\..\..\Demon Bluff Demo\MelonLoader\Il2CppAssemblies\Unity.ResourceManager.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="UnityEngine">
 			<HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="UnityEngine.CoreModule">
 			<HintPath>..\..\MelonLoader\Il2CppAssemblies\UnityEngine.CoreModule.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="UnityEngine.LocalizationModule">
+			<HintPath>..\..\..\Demon Bluff Demo\MelonLoader\Il2CppAssemblies\UnityEngine.LocalizationModule.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 	</ItemGroup>

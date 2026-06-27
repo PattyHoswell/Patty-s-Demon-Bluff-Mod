@@ -4,12 +4,14 @@ using MelonLoader;
 using MelonLoader.Utils;
 using Patty_ModdedCompendium_MOD;
 using Patty_ModdedCompendium_MOD.Patch;
+using Patty_ModdedCompendium_MOD.QoL;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.Localization;
 
 [assembly: MelonInfo(typeof(ModdedCompendium), "Patty_ModdedCompendium_MOD", "1.0.0", "PattyHoswell")]
 [assembly: MelonGame("UmiArt", "Demon Bluff")]
@@ -69,7 +71,7 @@ namespace Patty_ModdedCompendium_MOD
 
         internal static IEnumerable<CharactersCompendiumPage> GetCompendiumCharacters(Compendium compendium, ECharacterType characterType)
         {
-            Func<CharactersCompendiumPage, bool> findSimilarPage = x => x.pageName.Contains(characterType.GetName(), StringComparison.OrdinalIgnoreCase);
+            Func<CharactersCompendiumPage, bool> findSimilarPage = x => x.pageName.GetLocalizedString().Contains(characterType.GetName(), StringComparison.OrdinalIgnoreCase);
             return compendium.pages.Where(findSimilarPage);
         }
 
@@ -79,7 +81,7 @@ namespace Patty_ModdedCompendium_MOD
             {
                 return;
             }
-            Func<CharactersCompendiumPage, bool> findSimilarPage = x => x.pageName.Contains(characterType.GetName(), StringComparison.OrdinalIgnoreCase);
+            Func<CharactersCompendiumPage, bool> findSimilarPage = x => x.pageName.GetLocalizedString().Contains(characterType.GetName(), StringComparison.OrdinalIgnoreCase);
             var charactersPages = GetCompendiumCharacters(compendium, characterType);
             var pagesCount = charactersPages.Count();
             var page = charactersPages.FirstOrDefault(x => x.characterDatas.Length < compendium.cards.Length) ?? new CharactersCompendiumPage();
@@ -97,7 +99,7 @@ namespace Patty_ModdedCompendium_MOD
             var firstItem = charactersPages.FirstOrDefault();
             if (firstItem != null)
             {
-                var match = Regex.Match(charactersPages.First().pageName, COLOR_TAGS_REGEX);
+                var match = Regex.Match(charactersPages.First().pageName.GetLocalizedString(), COLOR_TAGS_REGEX);
                 if (match.Success)
                 {
                     colorTag = match.Groups[0].Value;
@@ -111,10 +113,12 @@ namespace Patty_ModdedCompendium_MOD
             {
                 var lastIndex = compendium.pages.FindLastIndex(findSimilarPage);
                 compendium.pages = lastIndex >= 0 ? compendium.pages.Insert(lastIndex + 1, page) : compendium.pages.Append(page).ToArray();
-                page.pageName = $"{colorTag}{characterType.GetName()}s";
+                var entry = LocalizedStringUtil.AddString($"COMPENDIUM_PAGE_{characterType}_{compendium.pages.IndexOf(page)}", $"{colorTag}{characterType.GetName()}s");
+                page.pageName = entry;
                 if (pagesCount >= 1)
                 {
-                    page.pageName += $" {pagesCount}/{pagesCount + 1}";
+                    page.page = $"{pagesCount}/{pagesCount + 1}";
+
                 }
             }
 
@@ -130,8 +134,10 @@ namespace Patty_ModdedCompendium_MOD
             {
                 return;
             }
-            var nameSearch = melonBase != null ? melonBase.Info.Name : "Unknown";
-            Func<CharactersCompendiumPage, bool> findSimilarPage = x => x.pageName.Contains(nameSearch, StringComparison.OrdinalIgnoreCase);
+            var nameSearch = melonBase != null ?
+                                LocalizedStringUtil.AddString($"COMPENDIUM_TITLE_{melonBase.Info.Name}", melonBase.Info.Name) :
+                                LocalizedStringUtil.AddString($"COMPENDIUM_TITLE_UNKNOWN", "Unknown");
+            Func<CharactersCompendiumPage, bool> findSimilarPage = x => x.pageName.GetLocalizedString().Contains(nameSearch.GetLocalizedString(), StringComparison.OrdinalIgnoreCase);
             var modPages = compendium.pages.Where(findSimilarPage);
             var page = modPages.FirstOrDefault(x => x.characterDatas.Length < compendium.cards.Length) ?? new CharactersCompendiumPage();
             if (page.characterDatas == null)
@@ -183,10 +189,10 @@ namespace Patty_ModdedCompendium_MOD
             for (var i = 0; i < category.Length; i++)
             {
                 var item = category[i];
-                if (!string.IsNullOrWhiteSpace(item.pageName))
+                if (!string.IsNullOrWhiteSpace(item.pageName.GetLocalizedString()))
                 {
                     var colorTag = "";
-                    var match = Regex.Match(item.pageName, COLOR_TAGS_REGEX);
+                    var match = Regex.Match(item.pageName.GetLocalizedString(), COLOR_TAGS_REGEX);
                     if (match.Success)
                     {
                         colorTag = match.Groups[0].Value;
@@ -197,10 +203,19 @@ namespace Patty_ModdedCompendium_MOD
                     }
                     if (rename)
                     {
-                        item.pageName = $"{colorTag}{characterType.GetName()}s";
+                        LocalizedString entry;
+                        if (item.pageName == null || item.pageName.TableEntryReference.Key.Length == 0)
+                        {
+                            entry = LocalizedStringUtil.AddString($"COMPENDIUM_PAGE_{characterType}_{i + 1}", $"{colorTag}{item.pageName.GetLocalizedString()}");
+                        }
+                        else
+                        {
+                            entry = LocalizedStringUtil.ChangeString(item.pageName.TableEntryReference.Key, $"{colorTag}{item.pageName.GetLocalizedString()}");
+                        }
+                        item.pageName = entry;
                         if (category.Length > 1)
                         {
-                            item.pageName += $" {i + 1}/{category.Length}";
+                            item.page = $"{i + 1}/{category.Length}";
                         }
                     }
                 }
@@ -213,10 +228,19 @@ namespace Patty_ModdedCompendium_MOD
                     }
                     if (rename)
                     {
-                        item.pageName = $"{colorTag}{characterType.GetName()}s";
+                        LocalizedString entry;
+                        if (item.pageName == null || item.pageName.TableEntryReference.Key.Length == 0)
+                        {
+                            entry = LocalizedStringUtil.AddString($"COMPENDIUM_PAGE_{characterType}_{i + 1}", $"{colorTag}{item.pageName.GetLocalizedString()}");
+                        }
+                        else
+                        {
+                            entry = LocalizedStringUtil.ChangeString(item.pageName.TableEntryReference.Key, $"{colorTag}{item.pageName.GetLocalizedString()}");
+                        }
+                        item.pageName = entry;
                         if (category.Length > 1)
                         {
-                            item.pageName += $" {i + 1}/{category.Length}";
+                            item.page = $"{i + 1}/{category.Length}";
                         }
                     }
                 }
@@ -232,12 +256,12 @@ namespace Patty_ModdedCompendium_MOD
             for (var i = 0; i < category.Length; i++)
             {
                 var item = category[i];
-                Func<CharactersCompendiumPage, bool> findSimilarPage = x => x.pageName.Equals(item.pageName, StringComparison.OrdinalIgnoreCase);
+                Func<CharactersCompendiumPage, bool> findSimilarPage = x => x.pageName.GetLocalizedString().Equals(item.pageName.GetLocalizedString(), StringComparison.OrdinalIgnoreCase);
                 var modPages = compendium.pages.Where(findSimilarPage);
-                if (!string.IsNullOrWhiteSpace(item.pageName))
+                if (!string.IsNullOrWhiteSpace(item.pageName.GetLocalizedString()))
                 {
                     var colorTag = "";
-                    var match = Regex.Match(item.pageName, COLOR_TAGS_REGEX);
+                    var match = Regex.Match(item.pageName.GetLocalizedString(), COLOR_TAGS_REGEX);
                     if (match.Success)
                     {
                         colorTag = match.Groups[0].Value;
@@ -248,10 +272,19 @@ namespace Patty_ModdedCompendium_MOD
                     }
                     if (rename)
                     {
-                        item.pageName = $"{colorTag}{item.pageName}";
+                        LocalizedString entry;
+                        if (item.pageName == null || item.pageName.TableEntryReference.Key.Length == 0)
+                        {
+                            entry = LocalizedStringUtil.AddString($"COMPENDIUM_TITLE_{item.pageName.GetLocalizedString()}", $"{colorTag}{item.pageName.GetLocalizedString()}");
+                        }
+                        else
+                        {
+                            entry = LocalizedStringUtil.ChangeString(item.pageName.TableEntryReference.Key, $"{colorTag}{item.pageName.GetLocalizedString()}");
+                        }
+                        item.pageName = entry;
                         if (modPages.Count() > 1)
                         {
-                            item.pageName += $" {modPages.FindIndex(item) + 1}/{modPages.Count()}";
+                            item.page = $"{modPages.FindIndex(item) + 1}/{modPages.Count()}";
                         }
                     }
                 }
@@ -264,10 +297,19 @@ namespace Patty_ModdedCompendium_MOD
                     }
                     if (rename)
                     {
-                        item.pageName = $"{colorTag}{item.pageName}";
+                        LocalizedString entry;
+                        if (item.pageName == null || item.pageName.TableEntryReference.Key.Length == 0)
+                        {
+                            entry = LocalizedStringUtil.AddString($"COMPENDIUM_TITLE_{item.pageName.GetLocalizedString()}", $"{colorTag}{item.pageName.GetLocalizedString()}");
+                        }
+                        else
+                        {
+                            entry = LocalizedStringUtil.ChangeString(item.pageName.TableEntryReference.Key, $"{colorTag}{item.pageName.GetLocalizedString()}");
+                        }
+                        item.pageName = entry;
                         if (modPages.Count() > 1)
                         {
-                            item.pageName += $" {modPages.FindIndex(item) + 1}/{modPages.Count()}";
+                            item.page = $"{modPages.FindIndex(item) + 1}/{modPages.Count()}";
                         }
                     }
                 }
